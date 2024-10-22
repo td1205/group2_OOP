@@ -7,17 +7,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.nhom2_quanlyanphamtrongthuvien.LoginMenu">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" stylesheets="@../../../../java/design/design.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.nhom2_quanlyanphamtrongthuvien.LoginMenu">
    <children>
       <PasswordField layoutX="212.0" layoutY="252.0" prefHeight="25.0" prefWidth="430.0" />
       <Button fx:id="SignIn" layoutX="508.0" layoutY="304.0" mnemonicParsing="false" onAction="#switchToMainMenu" prefHeight="45.0" prefWidth="109.0" text="Đăng nhập" />
-      <Text layoutX="112.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mật khẩu:" />
-      <Text layoutX="112.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tên đăng nhập:" />
+      <Text fill="WHITE" layoutX="112.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Mật khẩu:" />
+      <Text fill="WHITE" layoutX="112.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Tên đăng nhập:" />
       <TextField layoutX="212.0" layoutY="218.0" prefHeight="25.0" prefWidth="430.0" />
-      <Text layoutX="107.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="QUẢN LÍ ẤN PHẨM THƯ VIỆN" textAlignment="CENTER" wrappingWidth="572.8649291992188">
+      <Text id="Title" fx:id="Title" fill="#ebb565" layoutX="107.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="QUẢN LÍ ẤN PHẨM THƯ VIỆN" textAlignment="CENTER" wrappingWidth="572.8649291992188">
          <font>
             <Font size="39.0" />
          </font>
       </Text>
+      <Button fx:id="SignUp" layoutX="158.0" layoutY="304.0" mnemonicParsing="false" onAction="#switchToSignUpMenu" prefHeight="45.0" prefWidth="109.0" text="Đăng kí" />
+      <Text fill="WHITE" layoutX="162.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chưa có tài khoản?" />
    </children>
 </AnchorPane>

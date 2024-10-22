@@ -7,11 +7,36 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class MainMenuController implements Initializable{
+public class MainMenuController implements Initializable {
 
+    @FXML
+    private TextField textId;
+
+    @FXML
+    private TextField textName;
+
+    @FXML
+    private TextField textType;
+    @FXML
+    private TextField textCost;
+
+    @FXML
+    private TextField textQuantity;
+
+    @FXML
+    private TextField textNXB;
+
+    @FXML
+    private TextField textAuthor;
+
+    @FXML
+    private Button Add;
     @FXML
     private TableView<Danhsachanpham> table;
 
@@ -47,4 +72,25 @@ public class MainMenuController implements Initializable{
         // Set items to the table
         table.setItems(list);
     }
+
+    @FXML
+    public void add(ActionEvent event) {
+        // Lấy dữ liệu từ các trường văn bản
+        String id = textId.getText();
+        String name = textName.getText();
+        String type = textType.getText();
+        String cost = textCost.getText();
+        int quantity = Integer.parseInt(textQuantity.getText());
+        String nxb = textNXB.getText();
+        String author = textAuthor.getText();
+
+        // Tạo đối tượng Danhsachanpham mới
+        Danhsachanpham newProduct = new Danhsachanpham(id, name, type, cost, nxb, author, quantity);
+
+        // Thêm đối tượng mới vào danh sách
+        list.add(newProduct);
+        // Xóa nội dung trong các trường văn bản sau khi thêm
+        
+    }
+
 }

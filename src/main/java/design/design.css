@@ -1,0 +1,16 @@
+
+.button{
+    -fx-text-fill:white;
+    -fx-background-color:rgb(32,35,43);
+    -fx-background-radius: 50;
+
+}
+.root{
+    -fx-background-color:rgb(61,64,79);
+    -fx-font-family:"Arial";
+    -fx-text-fill:white;
+}
+
+.text {
+    -fx-font-weight: bold;  
+}

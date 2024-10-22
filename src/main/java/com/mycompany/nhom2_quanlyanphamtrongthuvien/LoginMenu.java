@@ -9,14 +9,16 @@ public class LoginMenu {
 
     @FXML
     private Button SignIn;
+    @FXML
+    private Button SignUp;
 
     @FXML
-private void switchToMainMenu(ActionEvent event) {
-    try {
+    private void switchToMainMenu(ActionEvent event) throws IOException {
         App.setRoot("Main");
-    } catch (IOException e) {
-        System.out.println("Lỗi khi tải Main.fxml: " + e.getMessage());
-        e.printStackTrace(); // Hiển thị lỗi chi tiết
     }
-}
+
+    @FXML
+    private void switchToSignUpMenu(ActionEvent event) throws IOException {
+        App.setRoot("SignUp");
+    }
 }
