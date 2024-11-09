@@ -1,0 +1,31 @@
+.text{
+    -fx-font-family:"Arial";
+    -fx-text-fill:white;
+}
+.text-title{
+    -fx-font-weight:bold;
+}
+.button-des{
+    -fx-background-color: #1db954;
+    -fx-padding:10 30 10 30;
+    -fx-background-radius: 100px;
+}
+.button-no-background {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+.box{
+    -fx-background-radius: 100px;
+}
+.background_menu{
+    -fx-background-image: url("background_menu.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+}
+.background_main{
+    -fx-background-image: url("background_main.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+}
