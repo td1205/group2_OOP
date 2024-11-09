@@ -36,8 +36,7 @@ import org.xml.sax.SAXException;
 
 public class MainController implements Initializable {
 
-    public static final String xmlFilePath = "src/main/resources/com/mycompany/prj/table_data.xml";
-
+    public static final String xmlFilePath = "/com/mycompany/prj/table_data.xml";
     private ObservableList<Product> productList;
     private final String[] productType = {"sách", "tiểu thuyết", "giáo trình", "tạp chí", "báo", "tập san", "sách tranh"};
     @FXML
@@ -73,7 +72,7 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Product, String> authorColumn;
 
-    private int idCounter = 0; 
+    private int idCounter = 0; // This will keep track of the current highest ID
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -90,6 +89,7 @@ public class MainController implements Initializable {
         tableView.setItems(productList);
     }
 
+// Modified loadProductData() to set idCounter
     private void loadProductData() {
         try {
             File xmlFile = new File(xmlFilePath);
@@ -245,24 +245,26 @@ public class MainController implements Initializable {
         productList.remove(selected);
 
         try {
+            // Mở và đọc tệp XML
             File xmlFile = new File(xmlFilePath);
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(xmlFile);
 
+            // Tìm phần tử <book> cần xóa dựa trên ID
             NodeList bookNodes = document.getElementsByTagName("book");
             for (int i = 0; i < bookNodes.getLength(); i++) {
                 Element bookElement = (Element) bookNodes.item(i);
                 String idValue = bookElement.getElementsByTagName("id").item(0).getTextContent();
 
-                
+                // Nếu ID của phần tử <book> trùng với ID của sản phẩm được chọn, thì xóa phần tử này
                 if (Integer.parseInt(idValue) == selected.getId()) {
                     bookElement.getParentNode().removeChild(bookElement);
                     break;
                 }
             }
 
-            
+            // Ghi lại tệp XML sau khi xóa
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource = new DOMSource(document);
@@ -286,7 +288,7 @@ public class MainController implements Initializable {
         }
 
         try {
-            
+            // Lấy dữ liệu mới từ các ô nhập liệu
             String updatedName = name.getText();
             String updatedType = type.getValue();
             int updatedPrice = Integer.parseInt(price.getText());
@@ -294,13 +296,13 @@ public class MainController implements Initializable {
             String updatedNxb = nxb.getText();
             String updatedAuthor = author.getText();
 
-            
+            // Kiểm tra xem dữ liệu đã được nhập đầy đủ chưa
             if (updatedName.isEmpty() || updatedNxb.isEmpty() || updatedAuthor.isEmpty()) {
                 text.setText("Vui lòng nhập đầy đủ thông tin!");
                 return;
             }
 
-
+            // Cập nhật đối tượng sản phẩm với dữ liệu mới
             selected.setName(updatedName);
             selected.setType(updatedType);
             selected.setPrice(updatedPrice);
@@ -308,20 +310,20 @@ public class MainController implements Initializable {
             selected.setNxb(updatedNxb);
             selected.setAuthor(updatedAuthor);
 
-
+            // Cập nhật dữ liệu trong tệp XML
             File xmlFile = new File(xmlFilePath);
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(xmlFile);
             document.getDocumentElement().normalize();
 
-
+            // Tìm phần tử <book> với ID tương ứng để cập nhật
             NodeList bookNodes = document.getElementsByTagName("book");
             for (int i = 0; i < bookNodes.getLength(); i++) {
                 Element bookElement = (Element) bookNodes.item(i);
                 String idValue = bookElement.getElementsByTagName("id").item(0).getTextContent();
 
-
+                // Cập nhật các giá trị của phần tử XML nếu ID trùng khớp
                 if (Integer.parseInt(idValue) == selected.getId()) {
                     bookElement.getElementsByTagName("name").item(0).setTextContent(updatedName);
                     bookElement.getElementsByTagName("type").item(0).setTextContent(updatedType);
@@ -333,7 +335,7 @@ public class MainController implements Initializable {
                 }
             }
 
-
+            // Lưu lại thay đổi vào tệp XML
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource = new DOMSource(document);
@@ -348,7 +350,7 @@ public class MainController implements Initializable {
             text.setText("Lỗi khi cập nhật XML.");
         }
 
-
+        // Cập nhật lại bảng để hiển thị các thay đổi
         tableView.refresh();
     }
 
@@ -363,7 +365,7 @@ public class MainController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.YES) {
             productList.clear();
-            tableView.setItems(productList); 
+            tableView.setItems(productList); // Refresh the table view
             idCounter = 0;
 
             try {
@@ -399,7 +401,7 @@ public class MainController implements Initializable {
         int priceInput;
         int amountInput;
 
-        
+        // Validate price and amount inputs
         try {
             priceInput = Integer.parseInt(price.getText().trim());
             amountInput = Integer.parseInt(amount.getText().trim());
@@ -432,7 +434,7 @@ public class MainController implements Initializable {
 
                 boolean match = true;
 
-
+                // Check each input against the XML data
                 if (!nameInput.isEmpty() && !xmlName.contains(nameInput)) {
                     match = false;
                 }
@@ -452,7 +454,7 @@ public class MainController implements Initializable {
                     match = false;
                 }
 
-                
+                // Add to filtered list if all conditions match
                 if (match) {
                     filteredList.add(new Product(id, xmlName, xmlType, xmlPrice, xmlAmount, xmlNxb, xmlAuthor));
                 }
@@ -462,7 +464,7 @@ public class MainController implements Initializable {
             return;
         }
 
-
+        // Display search results
         if (filteredList.isEmpty()) {
             text.setText("Không tìm thấy sản phẩm nào!");
         } else {

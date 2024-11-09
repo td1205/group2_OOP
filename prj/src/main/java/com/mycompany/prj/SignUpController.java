@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -27,13 +26,12 @@ import org.xml.sax.SAXException;
 
 public class SignUpController {
 
-    private Stage stage;
     private Scene scene;
+    private Stage stage;
     private Parent root;
     private String Username;
     private String Password;
-   public static final String xmlFilePath = "src/main/resources/com/mycompany/prj/data.xml";
-
+    public static final String xmlFilePath = "C:\\Users\\Tire\\Documents\\NetBeansProjects\\prj\\src\\main\\java\\com\\mycompany\\prj\\data.xml"; // Kiểm tra lại đường dẫn này nếu cần
 
     @FXML
     private PasswordField password;
@@ -55,58 +53,57 @@ public class SignUpController {
     }
 
     @FXML
-    public void Register(ActionEvent event) {
-        try {
-            Username = userName.getText();
-            Password = password.getText();
+    public void Register(ActionEvent event) throws ParserConfigurationException, IOException, TransformerException, SAXException {
+        Username = userName.getText();
+        Password = password.getText();
 
-            
-            if (Username.isEmpty() || Password.isEmpty()) {
-                text.setText("Please enter a username and password!");
-                return;
-            }
-
-            File xmlFile = new File(xmlFilePath);
-            DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-            Document document;
-
-            
-            if (xmlFile.exists()) {
-                document = documentBuilder.parse(xmlFile);
-                document.getDocumentElement().normalize();
-            } else {
-                document = documentBuilder.newDocument();
-                Element root = document.createElement("data");
-                document.appendChild(root);
-            }
-
-            
-            Element root = document.getDocumentElement();
-            Element user = document.createElement("user");
-            root.appendChild(user);
-
-            Element data_username = document.createElement("name");
-            data_username.appendChild(document.createTextNode(Username));
-            user.appendChild(data_username);
-
-            Element data_password = document.createElement("password");
-            data_password.appendChild(document.createTextNode(Password));
-            user.appendChild(data_password);
-
-            
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            DOMSource domSource = new DOMSource(document);
-            StreamResult streamResult = new StreamResult(xmlFile);
-            transformer.transform(domSource, streamResult);
-
-            text.setText("Registration successful!");
-        } catch (ParserConfigurationException | SAXException | IOException | TransformerException e) {
-            text.setText("Error occurred during registration!");
-            e.printStackTrace();
+        // Kiểm tra nếu Username và Password đã được nhập
+        if (Username.isEmpty() || Password.isEmpty()) {
+            text.setText("Vui lòng nhập tên đăng nhập và mật khẩu!");
+            return;
         }
+
+        File xmlFile = new File(xmlFilePath);
+
+        DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+        Document document;
+
+        // Đọc tài liệu XML hiện có hoặc tạo tài liệu mới
+        if (xmlFile.exists()) {
+            document = documentBuilder.parse(xmlFile);
+            document.getDocumentElement().normalize();
+            System.out.println("Da doc file hien co");
+        } else {
+            // Tạo tài liệu XML mới với phần tử gốc <data>
+            document = documentBuilder.newDocument();
+            Element root = document.createElement("data");
+            document.appendChild(root);
+            System.out.println("file moi se duoc tao");
+        }
+
+        // Thêm phần tử "user" mới vào tài liệu XML
+        Element root = document.getDocumentElement();
+        Element user = document.createElement("user");
+        root.appendChild(user);
+
+        Element data_username = document.createElement("name");
+        data_username.appendChild(document.createTextNode(Username));
+        user.appendChild(data_username);
+
+        Element data_password = document.createElement("password");
+        data_password.appendChild(document.createTextNode(Password));
+        user.appendChild(data_password);
+
+        // Ghi lại tài liệu XML vào tệp
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource domSource = new DOMSource(document);
+        StreamResult streamResult = new StreamResult(xmlFile);
+        transformer.transform(domSource, streamResult);
+
+        System.out.println("Luu thanh cong " + xmlFile.getAbsolutePath());
+
+        text.setText("Đăng ký thành công!");
     }
 }

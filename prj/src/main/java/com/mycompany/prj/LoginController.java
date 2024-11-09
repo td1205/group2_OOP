@@ -1,5 +1,6 @@
 package com.mycompany.prj;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javafx.event.ActionEvent;
@@ -21,6 +22,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class LoginController {
+
+    // Relative path to the XML file in the resources folder
+    public static final String xmlFilePath = "/com/mycompany/prj/data.xml"; 
 
     private Scene scene;
     private Stage stage;
@@ -48,52 +52,57 @@ public class LoginController {
     }
 
     @FXML
-    public void submit(ActionEvent event) {
+    public void submit(ActionEvent event) throws IOException, ParserConfigurationException, SAXException {
         Username = userName.getText();
         Password = password.getText();
 
-        try (InputStream inputStream = getClass().getResourceAsStream("/com/mycompany/prj/data.xml")) {
-            if (inputStream == null) {
-                System.out.println("XML file not found!");  
-                return;
-            }
+        // Load XML document from the resources folder
+        InputStream inputStream = getClass().getResourceAsStream(xmlFilePath);
 
-            DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(inputStream);
-            document.getDocumentElement().normalize();
+        if (inputStream == null) {
+            System.out.println("XML file not found!");
+            return;
+        }
 
-            NodeList nList = document.getElementsByTagName("user");
-            boolean loginSuccessful = false;
-            for (int i = 0; i < nList.getLength(); i++) {
-                org.w3c.dom.Node node = nList.item(i);
+        DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(inputStream);
 
-                if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-                    Element userElement = (Element) node;
-                    String storedUsername = userElement.getElementsByTagName("name").item(0).getTextContent();
-                    String storedPassword = userElement.getElementsByTagName("password").item(0).getTextContent();
+        document.getDocumentElement().normalize();
 
-                    if (Username.equals(storedUsername) && Password.equals(storedPassword)) {
-                        loginSuccessful = true;
-                        break;
-                    }
+        // Get list of "user" elements in the XML
+        NodeList nList = document.getElementsByTagName("user");
+
+        boolean loginSuccessful = false;
+
+        // Check each "user" element for login credentials
+        for (int i = 0; i < nList.getLength(); i++) {
+            org.w3c.dom.Node node = nList.item(i); // Use fully qualified name to avoid conflict
+
+            if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) { // Use fully qualified name here as well
+                Element userElement = (Element) node;
+                String storedUsername = userElement.getElementsByTagName("name").item(0).getTextContent();
+                String storedPassword = userElement.getElementsByTagName("password").item(0).getTextContent();
+
+                // Compare credentials
+                if (Username.equals(storedUsername) && Password.equals(storedPassword)) {
+                    loginSuccessful = true;
+                    break;
                 }
             }
+        }
 
-            if (loginSuccessful) {
-                root = FXMLLoader.load(getClass().getResource("/com/mycompany/prj/Main.fxml"));
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.setTitle("Welcome");
-                stage.show();
-            } else {
-                text.setText("Incorrect username or password!!!");
-            }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-            text.setText("An error occurred while processing the login!!!");
+        if (loginSuccessful) {
+            // Successful login, switch scene
+            root = FXMLLoader.load(getClass().getResource("/com/mycompany/prj/Main.fxml"));
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Welcome");
+            stage.show();
+        } else {
+            // Display error message if login credentials are incorrect
+            text.setText("Sai tên đăng nhập hoặc mật khẩu!");
         }
     }
-
 }

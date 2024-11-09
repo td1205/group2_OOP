@@ -1,42 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<data>
-                                
-    
-    
-    
-    
-    
-    
-    
-    <user>
-                                                                
-        
-        
-        
-        
-        
-        
-        <name>admin</name>
-                                                                
-        
-        
-        
-        
-        
-        
-        <password>1</password>
-                                                            
-    
-    
-    
-    
-    
-    
-    </user>
-                            
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><data>
 
-    
-    
-    
-    
+    <user>
+        <name>td</name>
+        <password>1</password>
+    </user>
+    <user>
+        <name>23010616</name>
+        <password>dt</password>
+    </user>
 </data>
